@@ -1,0 +1,61 @@
+---
+title: "Frequently used R codes"
+author: "Debajit Ghosh"
+date: "July 7, 2015"
+output: html_document
+---
+## This markdown file contains frequently used R codes 
+## Download a file from the web, XML, JSON
+
+### download.file("Url",destfile="", method="curl")
+
+### library(XML)
+### xmlfile <- xmlTreeParse("Url",useInternal=TRUE)
+### rootNode <- xmlRoot(xmlfile)
+### xmlName(rootNode)
+### rootNode[[1]]
+### rootNode[[1]][[1]]
+### xmlSApply(rootNode,xmlValue)
+### xpathSApply(rootNode,"//li=[@class='']",xmlValue)
+
+### library(jsonLite)
+### fromJSON("Url")
+## Writing data frames to JSON
+### toJSON(filename,pretty=TRUE)
+## Convert back to JSON
+### fromJSON(filename)
+
+## Reading data in flat files or excel sheets
+### read.table("",sep="",header=TRUE,quote="",na.strings="NA",nrows=,skip=)
+### library(xlsx)
+### read.xlsx("",sheetIndex=,header=TRUE,colIndex=,rowIndex=)
+## Using data.table to do single function statistical summary operations, add new columns, merge and subset 
+### datatable[,list(mean(x),sum(z))]
+### datatable[,table(y)]
+### datatable[,newcol:=expression]
+### datatable[,newcol:={name <- operation1; operation2}]
+### datatable[,a:=x >0]
+### datatable[,b:=mean(x+w),by=a]
+## Merge datasets using the same set key
+### 1. setKey(datatable1,colName) 
+### 2. setKey(datatable2, colName) 
+### 3. merge(,)
+### datatable['colname']
+## Fast reading
+### 1.file <- tempfile()
+### 2. write.table(dataset, file=file, row.names=FALSE, col.names=TRUE, sep="",quote=FALSE)
+### 3. system.time(fread(file))
+
+## Constructing R graphics
+### 1.boxplot(data$col, col="blue")
+### 2.abline(h=12)
+### 1.par(mfrow=c(2,1), mar=c(4,4,2,1)) 
+### 2.hist(subset(data,data$col=="")$column, col="blue")
+### 1.hist(data$col,col="blue",breaks=100)
+### 2.rug(data$col)
+### 3.abline(v=12,col="",lwd=,lty=)
+### 1.barplot(y~x,data=datasetname,col="wheat",main="title")
+### 1.with(dataset, plot(x,y,col="blue"))
+### 2.abline(h=,lwd=,lty=)
+
+
