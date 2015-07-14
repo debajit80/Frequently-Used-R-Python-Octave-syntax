@@ -58,4 +58,32 @@ output: html_document
 ### 1.with(dataset, plot(x,y,col="blue"))
 ### 2.abline(h=,lwd=,lty=)
 
+## Using dplyr package
+## 1. Creating a dataframe : x.df <- tbl_df(data)
+## 2. Multiple data manipulation operations using dplyr:
+result3 <-
+  cran %>%
+  group_by(package) %>%
+  summarize(count = n(),
+            unique = n_distinct(ip_id),
+            countries = n_distinct(country),
+            avg_bytes = mean(size)
+  ) %>%
+  filter(countries > 60) %>%
+  arrange(desc(countries), avg_bytes)
+print(result3)
 
+## MySQL
+ucscDb <- dbConnect(MySQL(), user="genome",
+                             host = "genome-mysql.cse.ucsc.edu")
+result <- dbGetQuery(ucscDb,"show databases;");dbDisconnect(ucscDb);
+
+hg19 <- dbConnect(MySQL(),user="genome",db="hg19",host="genome-mysql.cse.ucsc.edu")
+allTables <- dbListTables(hg19)
+dbListFields(hg19,"affyU133Plus2")
+dbGetQuery(hg19,"select count(*) from affyU133Plus2")
+affyData <- dbReadTable(hg19,"affyU133Plus2")
+query <- dbSendQuery(hg19,"select * from affyU133Plus2 where misMatches between 1 and 3")
+affyMis <- fetch(query);quantile(affyMis$misMacthes)
+affyMissSmall <- fetch(query,n=10);dbClearResult(query);
+dbDisconnect(hg19)
