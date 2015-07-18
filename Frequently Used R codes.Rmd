@@ -58,6 +58,45 @@ output: html_document
 ### 1.with(dataset, plot(x,y,col="blue"))
 ### 2.abline(h=,lwd=,lty=)
 
+## Lattice Plotting System
+### xyplot(y~x|f*g,data)
+## eample 
+### airquality <- transform(airquality, Month=factor(Month))
+    xyplot(Ozone~Wind | Month, data=airquality, layout=c(5,1))
+### panel function in lattice
+## example
+xyplot(y~x | f, panel=function(x,y,..){
+panel.xyplot(x,y,...)
+panel.abline(h=median(y),lty=2)
+})
+## ggplot2 - quick plot 
+### qplot(displ,hwy,data=mpg,color=drv)
+### qplot(displ,hwy,data=mpg,geom=c("point","smooth"))
+### qplot(hwy,data=mpg,fill=drv)
+### qplot(log(eno),data=maacs,geom="density")
+### qplot(log(pm25),log(eno),data=maacs,shape=mopos, color=mopos)
+### qplot(log(pm25),log(eno),data=maacs,color=mops,geom=c("point","smooth"),method="lm")
+## ggplot
+### g <- ggplot(df,aes(,))
+### g+geom_point(color="steelblue",size=4,alpha=1/2)+geom_smooth(method="lm")
+### g+geom_point(aes(color=bmicat),size=4,alpha=1/2)
+### g+geom_point()+facet_grid(.~bmicat)+geom_smooth(method="lm")
+### g+geom_point(aes(color=bmicat))+labs(title="")+labs(x="",y="")+geom_smooth(size=4,linetype=3,method="lm",se=FALSE)
+### g+geom_point(aes(color=bmicat))+theme_bw(base_family="Times")
+### g+geom_line()+coord_cartesian(ylim-c(,))
+
+### caalculate the deciles of the data
+cutpoints <- quantile()
+### Cut the data at deciles
+cut(,cutpoints)
+### see the levels
+levels()
+
+
+
+## facets
+qplot(displ,hwy,data=mpg,facets=.~drv)
+qplot(hwy,data=mpg,factes=drv~.,bindwidth=2)
 ## Using dplyr package
 ## 1. Creating a dataframe : x.df <- tbl_df(data)
 ## 2. Multiple data manipulation operations using dplyr:
