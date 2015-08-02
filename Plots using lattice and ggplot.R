@@ -36,5 +36,26 @@
 ##  making a box plot
 ### ggplot(diamonds,aes(carat,price))+geom_boxplot()+facet_grid(.~cut)
 
-
+###Plotting and Color in R
+##grDevices packages
+##colorRamp - mixing colors
+###pal <- colorRamp(c("red","blue"))
+###pal(0) -- red
+###pal(1) -- blue
+###pal(seq(0,1,len=10)) -- colors between red and blue
+##colorRampPalette
+###pal <- colorRampPalette(c("red","yellow"))
+###pal(2) -- hexademical --#FF0000 (red) #FFFF00 (red, green, 0-blue)
+##RColorBrewer
+###3 types of palettes - sequential(ordered data), diverging(deviate) and qualitiative(factors, categorical data)
+###can be used in conjubction with colorRamp() and colorRampPalette()
+##cols <- brewer.pal(3, "BuGn")
+###pal <- colorRampPalette(cols)
+###image(volcano, col=pal(20))
+###can be used with smoothScatter
+###smoothScatter(x,y)
+###rgb fn can be used to produce any color via RGB proportions
+###plot(x,y,col=rgb(0,0,0,0.2),pch=19) -- 0.2 alpha parameter, rest are RGB
+###color transparency can be added
+###colorspace package
 

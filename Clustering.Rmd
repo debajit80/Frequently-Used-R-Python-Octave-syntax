@@ -1,0 +1,95 @@
+---
+title: "Exploratory Data Analysis - Swirl"
+author: "Debajit Ghosh"
+date: "July 27, 2015"
+output: html_document
+---
+
+## Hierarchical Clustering
+
+* A simple way of quickly examining and displaying multi-dimensional data. This technique is usually most useful in the early stages of analysis when you're trying to get an understanding of the data, e.g., finding some pattern or relationship between different factors or variables. As the name suggests hierarchical clustering creates a hierarchy of clusters
+
+* Clustering organizes data points that are close into groups
+
+* Hierarchical clustering is an agglomerative, or bottom-up, approach. Each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy. This means that we'll find the closest two points and put them together in one cluster, then find the next closest pair and so forth. We'll repeat this process until we reach a reasonable stopping place
+
+* First, how do we define close? This is the most important step and there are several possibilities depending on the questions you're trying to answer and the data you have. Distance or
+similarity are usually the metrics used - Euclidean distance and correlation similarity are continuous measures, while Manhattan distance is a binary measure
+
+* Given two points on a plane, (x1,y1) and (x2,y2), the Euclidean distance is the square root of the sums of the squares of the distances between the two x-coordinates (x1-x2) and the two y-coordinates (y1-y2). This can be generalized to more than two dimensions as well.
+
+inline euqation: $Euclidean Distance = \ sqrt((A1-A2)^{2}+(B1-B2)^{2}+....+(Z1-Z2))$
+
+```{r}
+distxy <- dist(dataFrame, method="euclidean")
+```
+
+* Euclidean distance is distance "as the crow flies". Many applications, however, can't realistically use crow-flying distance. Cars, for instance, have to follow roads. In this case, we can use Manhattan or city block distance (also known as a taxicab metric).
+
+* Output of "dist" is a lower triangular matrix with rows and columns. Entry (i,j) indicates the distance between points i and j. Clearly you need only a lower triangular matrix since the distance between points i and j equals that between j and i.
+
+* R provides a simple function which you can call which creates a dendrogram for you. It's called hclust() and takes as an argument the pairwise distance matrix which we looked at before.
+
+
+``` {r}
+hc <- hclust(distxy)
+plot(dendogram(hc))
+```
+
+``` {r}
+abline(h=0.5,col="red") ## cut the dendogram horizontally
+abline(v=1.5,col="blue") ## cut the denodogram vertically
+```
+
+* Two ways to calculate distances between clusters of points are (a) complete linkage and it says that if you're trying to measure a distance between two clusters, take the
+greatest distance between the pairs of points in those two clusters. Obviously such pairs contain one point from each cluster. (b) the second way to measure a distance between two clusters that we'll just mention is called average linkage. First you compute an "average" point in each cluster (think of it as the cluster's center of gravity). You do this by computing the mean (average) x and y coordinates of the points in the cluster. Then you compute the distances between each cluster average to compute the intercluster distance.
+
+* Manhattan distance is the sum of the absolute values of the distances between each coordinate, so the distance between the points (x1,y1) and (x2,y2) is |x1-x2|+|y1-y2|. As with Euclidean distance, this too generalizes to more than 2 dimensions.
+
+* Heat map is "a graphical representation of data where the individual values contained in a matrix are represented as colors. ... Heat maps originated in 2D displays of the values in a data matrix. Larger values were represented by small dark gray or black squares (pixels) and smaller values by lighter squares."
+
+```{r}
+heatmap(dataMatrix, col=cm.colors(25))
+```
+
+## K means clustering
+
+* k-means method "aims to partition the points into k groups such that the sum of squares from points to the assigned cluster centres is minimized
+
+* As we said, k-means is a partioning approach which requires that you first guess how many clusters you have (or want). Once you fix this number, you randomly create a "centroid" (a phantom point) for each cluster and assign each point or observation in your dataset to the centroid to which it is closest. Once each point is assigned a centroid, you readjust the centroid's position by making it the average of the points assigned to it.
+
+* Once you have repositioned the centroids, you must recalculate the distance of the observations to the centroids and reassign any, if necessary, to the centroid closest to them. Again, once the reassignments are done, readjust the positions of the centroids based on the new cluster membership. The process stops once you reach an iteration in which no adjustments are made or when you've reached some predetermined maximum number of iterations.
+
+```{r}
+points(cx,cy,col=c("red","orange","purple"),pch=3,cex=2,lwd=2) ## cx, cy - matrix of centroid co-ordinates
+apply(distTmp, 2, which.min) ## finding the minimum distance
+points(x,y,pch=19,cex=2,col=cols1[newClust]) ## applies color stored in cols1 to the cluster assignment array stored in newClust
+tapply(x/y, newClust, mean) #recalculate centroids so they are the average of the cluster points assigned to them; separately for the x and y co-ordinates
+points(newCx,newCy,col=cols1,pch=8,cex=2,lwd=2) ## new centroids
+distTmp2 <- mdist(x,y,newCx,newCy) ## distances with new centroids
+newClust2 <- apply(distTmp2,2,which.min) ## finding the minimum distance; 2- column
+points(x,y,pch=19,cex=2,col=cols1[newClust2]) ## recolor
+finalCx/finalCy <- tapply(x/y, newClust, mean) ## new centroid
+points(finalCx,finalCy,col=cols1,pch=9,cex=2,lwd=2) ## plot the new centroids
+```
+
+```{r}
+kmeans(x, the numeric matrix of data, centers, iter.max, nstart) ## 2- either be number of clusters or a set of intial centroids
+plot(x,y,col=kmObj$cluster, pch=19,cex=2) ## plot the clusters
+points(kmObj$centers,col=c("black","red","green"),pch=3,cex=3,lwd=3) ## add the centroids
+```
+
+## Dimesnion Reduction
+* SVD, Singular Value Decomposition. -  express a matrix X of observations (rows) and variables (columns) as the product of 3 other matrices, i.e., X=UDV^t. This last term (V^t) represents the transpose of the matrix V.
+
+* Here U and V each have orthogonal (uncorrelated) columns. U's columns are the left singular vectors of X and V's columns are the right singular vectors of X.  D is a diagonal matrix, by which we mean that all of its entries not on the diagonal are 0. The diagonal entries of D are the singular values of X.
+
+```{r}
+svd(datamatrix)
+```
+
+* The function returns 3 components, d which holds 2 diagonal elements, u, a 2 by 2 matrix, and v, a 3 by 2 matrix. 
+
+* Basically, PCA is a method to reduce a high-dimensional data set to its essential elements (not lose information) and explain the variability in the data. We won't go into the mathematical details here, (R has a function to perform PCA), but you should know that SVD and PCA are closely related.
+
+* We'll demonstrate this now. First we have to scale mat, our simple example data matrix.  This means that we subtract the column mean from every element and divide the result by the column standard deviation. Of course R has a command, scale, that does this for you. 
